@@ -1079,7 +1079,7 @@ async def save_student_input(request: Request):
 def export_pdf():
     global LAST_PIPELINE_ERROR
 
-    pdf_path = OUTPUT_DIR / "recruiter_ready_xai_report.pdf"
+    pdf_path = OUTPUT_DIR / "academic_evidence_profile_report.pdf"
 
     try:
         # Generate XAI academic evidence PDF report
@@ -1123,7 +1123,7 @@ def export_pdf():
 
         return FileResponse(
             path=pdf_path,
-            filename="recruiter_ready_xai_report.pdf",
+            filename="academic_evidence_profile_report.pdf",
             media_type="application/pdf"
         )
 

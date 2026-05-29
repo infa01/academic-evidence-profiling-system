@@ -43,8 +43,8 @@ TARGETED_RAG_GENERATION_METADATA_PATH = (
 )
 
 CHARTS_DIR = BASE_DIR / "output" / "charts"
-PDF_OUTPUT_PATH = BASE_DIR / "output" / "recruiter_ready_xai_report.pdf"
-TEMP_PDF_OUTPUT_PATH = BASE_DIR / "output" / "recruiter_ready_xai_report.tmp.pdf"
+PDF_OUTPUT_PATH = BASE_DIR / "output" / "academic_evidence_profile_report.pdf"
+TEMP_PDF_OUTPUT_PATH = BASE_DIR / "output" / "academic_evidence_profile_report.tmp.pdf"
 
 
 def load_json(path, fallback=None):
@@ -810,7 +810,7 @@ def main():
         os.replace(TEMP_PDF_OUTPUT_PATH, PDF_OUTPUT_PATH)
     except PermissionError:
         fallback_path = BASE_DIR / "output" / (
-            "recruiter_ready_xai_report_"
+            "academic_evidence_profile_report_"
             f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         )
         os.replace(TEMP_PDF_OUTPUT_PATH, fallback_path)

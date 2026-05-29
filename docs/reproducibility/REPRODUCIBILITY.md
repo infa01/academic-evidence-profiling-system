@@ -154,7 +154,7 @@ python scripts\export_pdf_report.py
 Expected output:
 
 ```text
-output/recruiter_ready_xai_report.pdf
+output/academic_evidence_profile_report.pdf
 ```
 
 ## 9. Run the Dashboard

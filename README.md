@@ -144,7 +144,7 @@ output/targeted_rag_retrieved_evidence.json
 output/targeted_rag_generation_metadata.json
 output/targeted_occupation_prompt.txt
 output/targeted_occupation_report.txt
-output/recruiter_ready_xai_report.pdf
+output/academic_evidence_profile_report.pdf
 output/charts/
 ```
 

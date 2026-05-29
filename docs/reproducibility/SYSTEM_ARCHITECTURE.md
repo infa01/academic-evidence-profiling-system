@@ -160,7 +160,7 @@ auditable and reproducible outside the web interface.
 | `output/targeted_rag_retrieved_evidence.json` | Retrieved evidence for selected occupation generation. |
 | `output/rag_generation_metadata.json` | Generic generation quality metadata. |
 | `output/targeted_rag_generation_metadata.json` | Targeted generation quality metadata. |
-| `output/recruiter_ready_xai_report.pdf` | Final XAI/RAG PDF export. |
+| `output/academic_evidence_profile_report.pdf` | Final XAI/RAG PDF export. |
 
 ## 6. Design Rationale
 
