@@ -1,0 +1,744 @@
+{
+  "modules": [
+    {
+      "module_code": "CN4000",
+      "module_title": "Information Systems Modelling and Design",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4000_LO1",
+          "category": "Knowledge",
+          "text": "Describe various analysis and design methodologies, focusing on object-oriented methods and tools for the modelling, designing and development of information systems"
+        },
+        {
+          "lo_id": "CN4000_LO2",
+          "category": "Knowledge",
+          "text": "Identify the key Information Security legislation relating to Data Management and the role of professional bodies in the IT industry"
+        },
+        {
+          "lo_id": "CN4000_LO3",
+          "category": "Thinking skills",
+          "text": "Contrast the roles of management information and decision support systems in an organisation"
+        },
+        {
+          "lo_id": "CN4000_LO4",
+          "category": "Thinking skills",
+          "text": "Assess the impact of Information Systems on individuals, organisations and society at large"
+        },
+        {
+          "lo_id": "CN4000_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Apply object-oriented methods in the design, modelling and evaluation of computer-based applications"
+        },
+        {
+          "lo_id": "CN4000_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Design and model a simple information system using object-oriented models and tools"
+        },
+        {
+          "lo_id": "CN4000_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Work effectively as a member of a team in developing prototype and present models for a given scenario and demonstrate appropriate academic integrity"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN4001",
+      "module_title": "Software Development",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4001_LO1",
+          "category": "Knowledge",
+          "text": "Explain the activities involved in producing a software application"
+        },
+        {
+          "lo_id": "CN4001_LO2",
+          "category": "Knowledge",
+          "text": "Explain the need for, and produce, suitable software documentation"
+        },
+        {
+          "lo_id": "CN4001_LO3",
+          "category": "Thinking skills",
+          "text": "Identify the appropriate programming concepts to solve programming problems"
+        },
+        {
+          "lo_id": "CN4001_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Design and implement programs using an appropriate design and modelling methodology"
+        },
+        {
+          "lo_id": "CN4001_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Design and implement programs in a suitable high level language"
+        },
+        {
+          "lo_id": "CN4001_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Make use of a variety of software algorithms"
+        },
+        {
+          "lo_id": "CN4001_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Find solutions to complex computing problems using the technique of problem decomposition"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN4002",
+      "module_title": "Computer Systems & Networks",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4002_LO1",
+          "category": "Knowledge",
+          "text": "Identify the purpose and function of the main components of computer systems and networks including hardware, software and protocols"
+        },
+        {
+          "lo_id": "CN4002_LO2",
+          "category": "Knowledge",
+          "text": "Explain the significance of standard network models such as the TCP/IP and OSI models"
+        },
+        {
+          "lo_id": "CN4002_LO3",
+          "category": "Thinking skills",
+          "text": "Compare the performance of similar hardware components and devices"
+        },
+        {
+          "lo_id": "CN4002_LO4",
+          "category": "Thinking skills",
+          "text": "Analyse the characteristics of different types of physical transmission media and the various international standards that have been defined for interfacing a device to the different media"
+        },
+        {
+          "lo_id": "CN4002_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Configure system software, computer and network hardware"
+        },
+        {
+          "lo_id": "CN4002_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Write simple assembly language programs"
+        },
+        {
+          "lo_id": "CN4002_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Operate ICT equipment in a safe manner"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN4003",
+      "module_title": "Web Technologies",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4003_LO1",
+          "category": "Knowledge",
+          "text": "Demonstrate an understanding of the key principles in the design and implementation of web pages and the associated technologies, standards and legal requirements"
+        },
+        {
+          "lo_id": "CN4003_LO2",
+          "category": "Thinking skills",
+          "text": "Elicit, identify, analyse and specify the requirements for business-oriented projects"
+        },
+        {
+          "lo_id": "CN4003_LO3",
+          "category": "Thinking skills",
+          "text": "Select appropriate techniques for building web site"
+        },
+        {
+          "lo_id": "CN4003_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Design and implement a business-oriented web site"
+        },
+        {
+          "lo_id": "CN4003_LO5",
+          "category": "Skills for life and work (general skills)",
+          "text": "Evaluate, document and present a multimedia website"
+        },
+        {
+          "lo_id": "CN4003_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate evidence of reflection on academic performance by implementing feedback given"
+        },
+        {
+          "lo_id": "CN4003_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate appropriate use of technology to facilitate studies e.g. use of information resources, production of coursework, communication with tutors and peers. Find solutions to complex problems"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN4004",
+      "module_title": "Maths for Computing",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4004_LO1",
+          "category": "Knowledge",
+          "text": "Demonstrate knowledge and skill of working with different types of numbers encountered in the study and practice of computer science"
+        },
+        {
+          "lo_id": "CN4004_LO2",
+          "category": "Knowledge",
+          "text": "Demonstrate skills in mathematical logic and writing proofs"
+        },
+        {
+          "lo_id": "CN4004_LO3",
+          "category": "Thinking skills",
+          "text": "Apply knowledge of number systems in the context of computer architecture and system design"
+        },
+        {
+          "lo_id": "CN4004_LO4",
+          "category": "Thinking skills",
+          "text": "Apply concepts from linear and abstract algebra"
+        },
+        {
+          "lo_id": "CN4004_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Use mathematical applications such as sage for basic computations"
+        },
+        {
+          "lo_id": "CN4004_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate confidence in using number systems, proof techniques, combinatorial principles, probability and statistics to solve practical problems"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN4005",
+      "module_title": "Mental Wealth, Professional Life 1",
+      "level": 4,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN4005_LO1",
+          "category": "Knowledge",
+          "text": "Articulate the nature of work practices, employment patterns and industry requirements and research, identify and plan the required skills and competence acquisition for their proposed career area"
+        },
+        {
+          "lo_id": "CN4005_LO2",
+          "category": "Knowledge",
+          "text": "Demonstrate awareness of local and global issues (such as inequalities and sustainability) and identify ways in which their personal approach and actions could have positive social impact on cultures and the wider society"
+        },
+        {
+          "lo_id": "CN4005_LO3",
+          "category": "Thinking skills",
+          "text": "Effectively identify and understand the underlying emotions of individuals and groups, enhancing communication efficacy, empathy and influence and demonstrating reflexive and reflective thinking in relation to their own development"
+        },
+        {
+          "lo_id": "CN4005_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Use digital tools to gather, and present information and to evaluate and communicate the outcomes of their learning"
+        },
+        {
+          "lo_id": "CN4005_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Contribute constructively and creatively to a shared production process generated by an external organisation by applying appropriate modes of professional practice and behaviour"
+        },
+        {
+          "lo_id": "CN4005_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Solve problems within a group context"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5000",
+      "module_title": "Database Systems",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5000_LO1",
+          "category": "Knowledge",
+          "text": "Describe and evaluate the structure and underlying principles of a relational DBMS and assess the security, legal and ethical issues in database design"
+        },
+        {
+          "lo_id": "CN5000_LO2",
+          "category": "Thinking skills",
+          "text": "Describe, analyse and apply techniques for obtaining a normalised relational model from a conceptual model"
+        },
+        {
+          "lo_id": "CN5000_LO3",
+          "category": "Thinking skills",
+          "text": "Identify various database models�and demonstrate the understanding of logical design and structure of a database"
+        },
+        {
+          "lo_id": "CN5000_LO4",
+          "category": "Thinking skills",
+          "text": "Describe how the data can be stored, organised and manipulated in a database system"
+        },
+        {
+          "lo_id": "CN5000_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Identify organisational information requirements and model data solutions using three level database architecture"
+        },
+        {
+          "lo_id": "CN5000_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Design, develop and implement a database solution using an industry standard DBMS and languages"
+        },
+        {
+          "lo_id": "CN5000_LO7",
+          "category": "Subject-based practical skills",
+          "text": "Perform database administration tasks and be cognisant of the key concepts of data quality and data security using PL/SQL"
+        },
+        {
+          "lo_id": "CN5000_LO8",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate good time management, team working, presentation, problem solving and academic integrity skills"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5002",
+      "module_title": "Data Communications and Networks",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5002_LO1",
+          "category": "Knowledge",
+          "text": "Explain the operation of basic data communication techniques such as data encoding and transmissions"
+        },
+        {
+          "lo_id": "CN5002_LO2",
+          "category": "Thinking skills",
+          "text": "Evaluate the variety of communication networks including Ethernet, ATM wireless, cellular networks and other emerging network models"
+        },
+        {
+          "lo_id": "CN5002_LO3",
+          "category": "Thinking skills",
+          "text": "Distinguish between the various protocols which form a part of the TCP/IP suite in terms of their purpose and operation"
+        },
+        {
+          "lo_id": "CN5002_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Model data communication systems and networks using simulation software"
+        },
+        {
+          "lo_id": "CN5002_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Configure computer networks using a number of TCP/IP based protocols"
+        },
+        {
+          "lo_id": "CN5002_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Identify risk and safety factors in the operation of computer devices"
+        },
+        {
+          "lo_id": "CN5002_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Make effective use of available network resources to design a network"
+        },
+        {
+          "lo_id": "CN5002_LO8",
+          "category": "Skills for life and work (general skills)",
+          "text": "Apply mathematical techniques and principles of logic to analyse systems"
+        },
+        {
+          "lo_id": "CN5002_LO9",
+          "category": "Skills for life and work (general skills)",
+          "text": "Work effectively as a member of a team in designing and assessing a network for a given scenario"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5004",
+      "module_title": "Advanced Programming",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5004_LO1",
+          "category": "Knowledge",
+          "text": "Distinguish between a variety of programming paradigms"
+        },
+        {
+          "lo_id": "CN5004_LO2",
+          "category": "Thinking skills",
+          "text": "Design software applications using object-oriented concepts"
+        },
+        {
+          "lo_id": "CN5004_LO3",
+          "category": "Subject-based practical skills",
+          "text": "Implement object-oriented designs using an object-oriented programming language"
+        },
+        {
+          "lo_id": "CN5004_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Develop event-driven programs with attractive graphical user interfaces"
+        },
+        {
+          "lo_id": "CN5004_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Save data to and read data from files using a variety of file handling approaches"
+        },
+        {
+          "lo_id": "CN5004_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Document and deploy software applications"
+        },
+        {
+          "lo_id": "CN5004_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Find solutions to complex computing problems using the technique of abstraction"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5005",
+      "module_title": "Data Structures and Algorithms",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5005_LO1",
+          "category": "Knowledge",
+          "text": "Identify the most appropriate algorithms and data structures for solving complex problems"
+        },
+        {
+          "lo_id": "CN5005_LO2",
+          "category": "Thinking skills",
+          "text": "Critically evaluate a range of data structures for solving complex problems"
+        },
+        {
+          "lo_id": "CN5005_LO3",
+          "category": "Thinking skills",
+          "text": "Critically evaluate a range of algorithms for solving complex problems"
+        },
+        {
+          "lo_id": "CN5005_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Design and implement a range of data structures"
+        },
+        {
+          "lo_id": "CN5005_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Make use of a variety of software algorithms"
+        },
+        {
+          "lo_id": "CN5005_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Solve problems using a variety of tools and techniques"
+        },
+        {
+          "lo_id": "CN5005_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate time management and presentation skills"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5006",
+      "module_title": "Web and Mobile App Development",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5006_LO1",
+          "category": "Knowledge",
+          "text": "Demonstrate critical understanding of web application development technologies, development platforms and toolsets to develop a full working system"
+        },
+        {
+          "lo_id": "CN5006_LO2",
+          "category": "Knowledge",
+          "text": "Demonstrate critical understanding of mobile application development technologies, development platforms and toolsets to develop a full working system"
+        },
+        {
+          "lo_id": "CN5006_LO3",
+          "category": "Thinking skills",
+          "text": "Critically evaluate the web development process using current industry standards, configuration management and version control"
+        },
+        {
+          "lo_id": "CN5006_LO4",
+          "category": "Thinking skills",
+          "text": "Solve issues and understanding configuration management and version control"
+        },
+        {
+          "lo_id": "CN5006_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Design a web application using appropriate design and system development methodologies"
+        },
+        {
+          "lo_id": "CN5006_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Design a mobile application using appropriate design and system development methodologies"
+        },
+        {
+          "lo_id": "CN5006_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Develop and apply a rigorous approach in finding solutions to complex problems in the development of mobile and web applications"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN5009",
+      "module_title": "Mental Wealth, Professional Life 2 (Computing in Practice)",
+      "level": 5,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN5009_LO1",
+          "category": "Knowledge",
+          "text": "Demonstrate an awareness of the current state of the IT job market, future trends and the commercial needs of IT employers"
+        },
+        {
+          "lo_id": "CN5009_LO2",
+          "category": "Thinking skills",
+          "text": "Compare and contrast their own skills, behaviour, attitudes and competences with those prized by graduate employers, and propose personal actions to bring these closer together"
+        },
+        {
+          "lo_id": "CN5009_LO3",
+          "category": "Subject-based practical skills",
+          "text": "Use digital tools to construct a professional CV and to complete a job application form which meets an IT employer's selection criteria"
+        },
+        {
+          "lo_id": "CN5009_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Apply suitable methods, techniques and information and communication technologies to the solution of real-world, business problems"
+        },
+        {
+          "lo_id": "CN5009_LO5",
+          "category": "Skills for life and work (general skills)",
+          "text": "Conduct themselves in a professional manner including working within a team and respecting the perspectives of others"
+        },
+        {
+          "lo_id": "CN5009_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Identify graduate level job opportunities and make effective preparations for the selection and recruitment processes associated with those graduate level opportunities"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN6000",
+      "module_title": "Mental Wealth, Professional Life 3 (Project)",
+      "level": 6,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN6000_LO1",
+          "category": "Knowledge",
+          "text": "Demonstrate a sound knowledge and understanding of the subject area to which their project relates"
+        },
+        {
+          "lo_id": "CN6000_LO2",
+          "category": "Thinking skills",
+          "text": "Critically reflect upon the ethical, legal, and social considerations of a chosen project topic"
+        },
+        {
+          "lo_id": "CN6000_LO3",
+          "category": "Thinking skills",
+          "text": "Evaluate both the research of others and their own project work"
+        },
+        {
+          "lo_id": "CN6000_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Analyse the problem domain to which the project relates and present that analysis in the form of a literature review"
+        },
+        {
+          "lo_id": "CN6000_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Specify, design and implement a solution to a non-trivial computing problem using industry-standard methodologies, tools and techniques"
+        },
+        {
+          "lo_id": "CN6000_LO6",
+          "category": "Skills for life and work (general skills)",
+          "text": "Defend their work using both verbal and non-verbal communication channels"
+        },
+        {
+          "lo_id": "CN6000_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Demonstrate an ability to organise, manage, and document a sizeable piece of independent academic work"
+        },
+        {
+          "lo_id": "CN6000_LO8",
+          "category": "Skills for life and work (general skills)",
+          "text": "Provide feedback to mentees and peers"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN6003",
+      "module_title": "Computer and Network Security",
+      "level": 6,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN6003_LO1",
+          "category": "Knowledge",
+          "text": "Identify both the tools and techniques used by attackers to compromise computer and network security and the types of attack that can be launched by using these tools or techniques"
+        },
+        {
+          "lo_id": "CN6003_LO2",
+          "category": "Thinking skills",
+          "text": "Distinguish between the various types of attack and their consequences"
+        },
+        {
+          "lo_id": "CN6003_LO3",
+          "category": "Thinking skills",
+          "text": "Compare and contrast the various tools and techniques that can be used to protect computer systems and networks from attack and to select appropriate tools or techniques for dealing with specific attacks"
+        },
+        {
+          "lo_id": "CN6003_LO4",
+          "category": "Subject-based practical skills",
+          "text": "Set up, configure and assess the effectiveness of a range of network security tools and devices"
+        },
+        {
+          "lo_id": "CN6003_LO5",
+          "category": "Skills for life and work (general skills)",
+          "text": "Analyse a problem and devise one or more solutions to it"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN6005",
+      "module_title": "Artificial Intelligence",
+      "level": 6,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN6005_LO1",
+          "category": "Knowledge",
+          "text": "Describe the principles of the AI systems covered, i.e. rule based sytems, biologically inspired systems and data mining models"
+        },
+        {
+          "lo_id": "CN6005_LO2",
+          "category": "Knowledge",
+          "text": "Demonstrate knowledge of the steps in developing AI systems"
+        },
+        {
+          "lo_id": "CN6005_LO3",
+          "category": "Knowledge",
+          "text": "Critically evaluate the current state of research and ethical issues in the identified area"
+        },
+        {
+          "lo_id": "CN6005_LO4",
+          "category": "Thinking skills",
+          "text": "Demonstrate a thorough understanding of the role and importance of AI systems"
+        },
+        {
+          "lo_id": "CN6005_LO5",
+          "category": "Thinking skills",
+          "text": "Develop a critical understanding of the issues associated with the application of AI systems"
+        },
+        {
+          "lo_id": "CN6005_LO6",
+          "category": "Thinking skills",
+          "text": "Effectively use AI software tools and techniques to simulate the principles and working of an AI systems through the critical analysis of specific case studies / data sets"
+        },
+        {
+          "lo_id": "CN6005_LO7",
+          "category": "Subject-based practical skills",
+          "text": "Demonstrate competence in applying AI concepts and techniques through implementation based on various existing technologies"
+        },
+        {
+          "lo_id": "CN6005_LO8",
+          "category": "Skills for life and work (general skills)",
+          "text": "Gain experience of report writing and presentation of analysis results"
+        },
+        {
+          "lo_id": "CN6005_LO9",
+          "category": "Skills for life and work (general skills)",
+          "text": "Use software packages to implement the AI systems covered, during tutorials and for completing the Portfolio based assessment"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN6006",
+      "module_title": "Formal Methods",
+      "level": 6,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN6006_LO1",
+          "category": "Knowledge",
+          "text": "Identify and critically evaluate the legal, social and ethical issues involved in the production of high integrity software for safe operation of computing systems"
+        },
+        {
+          "lo_id": "CN6006_LO2",
+          "category": "Knowledge",
+          "text": "Be familiar with a formal language for expressing software requirements"
+        },
+        {
+          "lo_id": "CN6006_LO3",
+          "category": "Knowledge",
+          "text": "Distinguish between different forms of program verification (proof, testing, assertions)"
+        },
+        {
+          "lo_id": "CN6006_LO4",
+          "category": "Thinking skills",
+          "text": "Solve problems by applying the theory underpinning formal software engineering methods"
+        },
+        {
+          "lo_id": "CN6006_LO5",
+          "category": "Thinking skills",
+          "text": "Identify defensive programming techniques to reduce software risk"
+        },
+        {
+          "lo_id": "CN6006_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Develop a series of formal specifications from informal requirements using the formal modelling language studied"
+        },
+        {
+          "lo_id": "CN6006_LO7",
+          "category": "Subject-based practical skills",
+          "text": "Develop an executable model from a formal specification using a suitable modelling tool"
+        },
+        {
+          "lo_id": "CN6006_LO8",
+          "category": "Skills for life and work (general skills)",
+          "text": "Use formal modelling skills to abstract away unnecessary details in a set of requirements and focus on the key concepts"
+        }
+      ]
+    },
+
+    {
+      "module_code": "CN6008",
+      "module_title": "Advanced Topics in Computer Science",
+      "level": 6,
+      "learning_outcomes": [
+        {
+          "lo_id": "CN6008_LO1",
+          "category": "Knowledge",
+          "text": "Describe and evaluate the key current topics in Computer Science covered in this module"
+        },
+        {
+          "lo_id": "CN6008_LO2",
+          "category": "Knowledge",
+          "text": "Critically evaluate some of the key legal, social, ethical and professional issues facing the Computer Science professional"
+        },
+        {
+          "lo_id": "CN6008_LO3",
+          "category": "Thinking skills",
+          "text": "Make appropriate decisions on how to evaluate and select the ideal frameworks to develop a computing application"
+        },
+        {
+          "lo_id": "CN6008_LO4",
+          "category": "Thinking skills",
+          "text": "Effectively use tools and techniques to simulate the principles and working of a computing application"
+        },
+        {
+          "lo_id": "CN6008_LO5",
+          "category": "Subject-based practical skills",
+          "text": "Design, test and validate computing applications using the models and tools covered in this module"
+        },
+        {
+          "lo_id": "CN6008_LO6",
+          "category": "Subject-based practical skills",
+          "text": "Produce application documentation to a professional standard"
+        },
+        {
+          "lo_id": "CN6008_LO7",
+          "category": "Skills for life and work (general skills)",
+          "text": "Work effectively as a member of a team to develop a practical application"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "student_id": "synthetic_student_001",
+  "student_name": "Synthetic Student",
+  "selected_modules": [
+    {
+      "module_code": "CN4000",
+      "final_grade": 78,
+      "coursework_weight": 0.5,
+      "coursework_components": 1,
+      "courseworks": [
+        {
+          "component": "coursework_1",
+          "grade": 76,
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "module_code": "CN5000",
+      "final_grade": 84,
+      "coursework_weight": 0.5,
+      "coursework_components": 1,
+      "courseworks": [
+        {
+          "component": "coursework_1",
+          "grade": 82,
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "module_code": "CN6000",
+      "final_grade": 88,
+      "coursework_weight": 0.5,
+      "coursework_components": 1,
+      "courseworks": [
+        {
+          "component": "coursework_1",
+          "grade": 86,
+          "weight": 0.5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Academic Evidence Profiling Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>Academic Evidence Profiling Dashboard</h1>
+        <p>Student ID: {{ profile.student_id }}</p>
+        {% if student_input.student_name %}
+            <p>Student Name: {{ student_input.student_name }}</p>
+        {% endif %}
+    </header>
+
+    <div class="action-bar">
+        
+        <a href="/student-input" class="secondary-link">
+            Edit Student Input
+        </a>
+
+        <form id="generate-report-form" action="/generate-report" method="post">
+            <button id="generate-report-btn" class="generate-btn" type="submit">
+                Generate Generic RAG Report
+            </button>
+        </form>
+
+        <form id="generate-targeted-report-form" action="/generate-targeted-report" method="post" class="model-form">
+            <select name="occupation_uri" aria-label="Target occupation">
+                {% for occupation in top_occupation_signals %}
+                    <option value="{{ occupation.occupation_uri }}">
+                        {{ occupation.occupation_label }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button id="generate-targeted-report-btn" class="generate-btn" type="submit">
+                Generate Targeted Occupation Report
+            </button>
+        </form>
+
+        <form action="/export-pdf" method="post">
+            <button class="secondary-btn" type="submit">
+                Export XAI Evidence PDF
+            </button>
+        </form>
+
+        <form action="/set-llm-model" method="post" class="model-form">
+            <label>
+                Local LLM Model:
+            </label>
+
+            <select name="llm_model">
+                <option value="qwen2.5:7b" {% if llm_config.model == "qwen2.5:7b" %}selected{% endif %}>
+                    Qwen2.5 7B - Selected Default
+                </option>
+
+                <option value="llama3.1:8b" {% if llm_config.model == "llama3.1:8b" %}selected{% endif %}>
+                    Llama 3.1 8B - Fallback Baseline
+                </option>
+
+                <option value="mistral" {% if llm_config.model == "mistral" %}selected{% endif %}>
+                    Mistral 7B - Concise 7B Baseline
+                </option>
+
+                <option value="phi3:mini" {% if llm_config.model == "phi3:mini" %}selected{% endif %}>
+                    Phi-3 Mini - Lightweight
+                </option>
+
+                <option value="gemma2:9b" {% if llm_config.model == "gemma2:9b" %}selected{% endif %}>
+                    Gemma 2 9B - Tested, Timeout Risk
+                </option>
+            </select>
+
+            <button class="secondary-btn" type="submit">
+                Save Model
+            </button>
+        </form>
+
+    </div>
+
+    <div class="view-toggle">
+        <button id="theme-toggle" class="secondary-btn">
+            Toggle Dark Theme
+        </button>
+    </div>
+
+    <main class="container">
+        {% if pipeline_error %}
+            <section class="card error-card">
+                <h2>System Warning</h2>
+
+                <p>
+                    The latest system action could not be completed. The dashboard may be
+                    showing the most recent successfully generated outputs.
+                </p>
+
+                <details>
+                    <summary>Technical error details</summary>
+                    <pre>{{ pipeline_error }}</pre>
+                </details>
+            </section>
+        {% endif %}
+
+        <section class="card methodology-panel dashboard-section-methodology">
+            <h2>Methodology / Help</h2>
+
+            <details>
+                <summary>How does the system generate the academic evidence profile?</summary>
+
+                <p>
+                    The system analyses completed modules, learning outcomes, Bloom cognitive
+                    evidence, ESCO skill relevance, student performance signals, semantic
+                    similarity scores, and ESCO occupation-orientation signals. Scores are used
+                    as academic evidence-strength indicators for explainability and RAG retrieval,
+                    not as professional certification.
+                </p>
+            </details>
+
+            <details>
+                <summary>How should scores be interpreted?</summary>
+
+                <p>
+                    Raw scores are conservative composite indicators of academic evidence strength.
+                    Academic normalized scores are calculated against the theoretical academic
+                    evidence ceiling of the scoring model and should not be interpreted as
+                    professional mastery percentages. Relative profile rank is used only to
+                    compare skills within the same student profile.
+                </p>
+
+                <p>
+                    <strong>Formula:</strong>
+                    {{ final_profile.methodology.scoring_formula }}
+                </p>
+
+                {% if final_profile.methodology.scoring_components %}
+                    <ul>
+                        {% for component, explanation in final_profile.methodology.scoring_components.items() %}
+                            <li>
+                                <strong>{{ component | replace("_", " ") | title }}:</strong>
+                                {{ explanation }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </details>
+
+            <details>
+                <summary>How is the AI report generated?</summary>
+
+                <p>
+                    The employability report is generated locally using the selected Ollama model.
+                    Before generation, the system retrieves structured evidence chunks from the
+                    final student profile and builds a RAG-grounded prompt. The model is instructed
+                    to use only that retrieved evidence.
+                </p>
+            </details>
+
+            {% if rag_evaluation_metrics or targeted_rag_evaluation_metrics %}
+                <details>
+                    <summary>How were RAG/LLM outputs evaluated?</summary>
+
+                    <p>
+                        The prototype includes lightweight RAGAS-inspired proxy checks for
+                        context precision, section relevance, faithfulness, answer relevance,
+                        and evidence mention coverage. These scores are used as technical
+                        quality signals, not as proof that the generated advice is clinically
+                        or professionally validated.
+                    </p>
+
+                    <div class="metric-grid compact-metrics">
+                        {% if rag_evaluation_metrics %}
+                            <div class="metric-box">
+                                <span class="metric-label">Generic Faithfulness</span>
+                                <strong>
+                                    {{ rag_evaluation_metrics.faithfulness.faithfulness_proxy|default("-") }}
+                                </strong>
+                            </div>
+
+                            <div class="metric-box">
+                                <span class="metric-label">Generic Relevance</span>
+                                <strong>
+                                    {{ rag_evaluation_metrics.answer_relevance.answer_relevance_proxy|default("-") }}
+                                </strong>
+                            </div>
+                        {% endif %}
+
+                        {% if targeted_rag_evaluation_metrics %}
+                            <div class="metric-box">
+                                <span class="metric-label">Targeted Faithfulness</span>
+                                <strong>
+                                    {{ targeted_rag_evaluation_metrics.faithfulness.faithfulness_proxy|default("-") }}
+                                </strong>
+                            </div>
+
+                            <div class="metric-box">
+                                <span class="metric-label">Targeted Relevance</span>
+                                <strong>
+                                    {{ targeted_rag_evaluation_metrics.answer_relevance.answer_relevance_proxy|default("-") }}
+                                </strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </details>
+            {% endif %}
+        </section>
+
+        <section class="card dashboard-section-summary">
+            <h2>Final Structured Evidence Profile</h2>
+
+            <p class="xai-note">
+                This is the canonical output used by the dashboard, RAG preparation,
+                LLM report generation, and PDF export. It keeps the intermediate
+                pipeline explainable while giving downstream components one stable
+                evidence contract.
+            </p>
+
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <span class="metric-label">Schema</span>
+                    <strong>{{ final_profile_summary.schema_version }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Learning Outcomes</span>
+                    <strong>{{ final_profile_summary.learning_outcome_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Raw Skill Occurrences</span>
+                    <strong>{{ final_profile_summary.raw_occurrence_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Calibrated ESCO Skills</span>
+                    <strong>{{ final_profile_summary.calibrated_skill_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Semantic Domains</span>
+                    <strong>{{ final_profile_summary.semantic_domain_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">RAG Evidence Chunks</span>
+                    <strong>{{ final_profile_summary.rag_chunk_count }}</strong>
+                </div>
+            </div>
+
+            {% if final_profile.methodology.notes %}
+                <details class="technical-info">
+                    <summary>Methodology notes from final profile</summary>
+
+                    {% for key, note in final_profile.methodology.notes.items() %}
+                        <p>
+                            <strong>{{ key | replace("_", " ") | title }}:</strong>
+                            {{ note }}
+                        </p>
+                    {% endfor %}
+                </details>
+            {% endif %}
+
+            {% if final_profile.methodology.limitations %}
+                <details class="technical-info">
+                    <summary>Scoring limitations</summary>
+
+                    <ul>
+                        {% for limitation in final_profile.methodology.limitations %}
+                            <li>{{ limitation }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+            {% endif %}
+        </section>
+
+        <section class="card dashboard-section-lo-trace">
+            <h2>Learning Outcome Evidence Trace</h2>
+
+            <p class="xai-note">
+                This section traces each module learning outcome to its Bloom evidence,
+                retained ESCO skill matches, semantic similarity and skill-occurrence
+                evidence score.
+            </p>
+
+            {% if module_esco_skill_groups %}
+                <div class="module-skill-grid">
+                    {% for module_group in module_esco_skill_groups %}
+                        <details class="module-skill-card">
+                            <summary>
+                                <span>
+                                    <strong>{{ module_group.module_code }}</strong>
+                                    {% if module_group.module_title %}
+                                        — {{ module_group.module_title }}
+                                    {% endif %}
+                                </span>
+
+                                <span class="module-skill-count">
+                                    {{ module_group.skill_count }} ESCO skills
+                                </span>
+                            </summary>
+
+                            {% if module_group.skills %}
+                                <div class="module-skill-list">
+                                    {% for skill in module_group.skills %}
+                                        <details class="module-skill-details">
+                                            <summary>
+                                                <span>
+                                                    Details
+                                                </span>
+                                                
+                                                <span class="summary-bloom-label">
+                                                    Bloom Level:
+                                                    <span class="badge">
+                                                        {{ skill.bloom_level }}
+                                                    </span>
+                                                </span>
+                                            </summary>
+
+                                            <div class="xai-detail-grid">
+                                                <p>
+                                                    <strong>Learning Outcome ID:</strong>
+                                                    {{ skill.learning_outcome_id }}
+                                                </p>
+
+                                                <p>
+                                                <strong>ESCO Semantic Similarity:</strong>
+                                                {{ skill.similarity_score }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Semantic Match Quality:</strong>
+                                                {{ skill.semantic_match_quality }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Candidate Rank:</strong>
+                                                {{ skill.candidate_rank_by_similarity }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Skill Occurrence Evidence Score:</strong>
+                                                {{ skill.occurrence_evidence_score }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Grade Evidence Weight:</strong>
+                                                {{ skill.grade_weight }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Bloom Weight:</strong>
+                                                {{ skill.bloom_weight }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Module Level Weight:</strong>
+                                                {{ skill.module_level_weight }}
+                                            </p>
+
+                                                <p>
+                                                    <strong>Bloom Level:</strong>
+                                                    {{ skill.bloom_level }}
+                                                </p>
+
+                                                <p class="xai-grid-item">
+                                                    <strong>Bloom Method:</strong>
+                                                    <span class="technical-value">
+                                                        {{ skill.bloom_method }}
+                                                    </span>
+                                                </p>
+
+                                                <p class="xai-grid-item">
+                                                    <strong>Bloom Rule:</strong>
+                                                    <span class="technical-value">
+                                                        {{ skill.bloom_rule }}
+                                                    </span>
+                                                </p>
+
+                                                <p class="xai-grid-item">
+                                                    <strong>Primary Action Verb:</strong>
+                                                    <span class="technical-value">
+                                                        {{ skill.primary_action_verb }}
+                                                    </span>
+                                                </p>
+
+                                                <p class="xai-grid-item">
+                                                    <strong>Bloom Confidence:</strong>
+                                                    <span class="technical-value">
+                                                        {{ skill.bloom_confidence }}
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <strong>Score Margin:</strong>
+                                                    {{ skill.score_margin }}
+                                                </p>
+
+                                            <p>
+                                                <strong>Confidence Status:</strong>
+                                                {{ skill.bloom_confidence_status }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Bloom Reliability:</strong>
+                                                {{ skill.bloom_classification_reliability }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Bloom Ambiguity:</strong>
+                                                {{ skill.bloom_ambiguity_status }}
+                                            </p>
+
+                                            {% if skill.is_bloom_near_tie %}
+                                                <p class="xai-note warning-note">
+                                                    This learning outcome produced a near-tie between
+                                                    Bloom candidates. It is treated as mixed/ambiguous
+                                                    cognitive evidence using the margin threshold
+                                                    {{ skill.near_tie_margin_threshold }}.
+                                                </p>
+                                            {% endif %}
+
+                                            <p class="xai-grid-item">
+                                                <strong>Occurrence Formula:</strong>
+                                                <span class="technical-value">
+                                                    {{ skill.occurrence_formula }}
+                                                </span>
+                                            </p>
+                                            </div>
+
+                                            <p class="xai-note">
+                                                {{ skill.semantic_match_note }}
+                                            </p>
+
+                                            <p>
+                                                <strong>Learning Outcome:</strong>
+                                                {{ skill.learning_outcome_text }}
+                                            </p>
+
+                                            <div class="esco-skill-reference">
+                                                <strong>ESCO Skill: </strong>
+                                                {{ skill.esco_skill_name }}
+                                            </div>
+
+                                            <p>
+                                                <strong>ESCO URI:</strong>
+                                                {{ skill.esco_uri }}
+                                            </p>
+
+                                            <p>
+                                                <strong>ESCO Skill Description:</strong>
+                                                {{ skill.preferred_label }}
+                                            </p>
+
+                                            {% if skill.matched_verbs %}
+                                                <p>
+                                                    <strong>Matched Bloom Verbs:</strong>
+                                                    {{ skill.matched_verbs | join(", ") }}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if skill.candidate_levels_from_verbs %}
+                                                <p>
+                                                    <strong>Candidate Bloom Levels:</strong>
+                                                    {{ skill.candidate_levels_from_verbs | join(", ") }}
+                                                </p>
+                                            {% endif %}
+
+                                            <p class="xai-note">
+                                                {{ skill.bloom_interpretation_note }}
+                                            </p>
+
+                                            <p class="xai-note">
+                                                {{ skill.bloom_classification_reliability_note }}
+                                            </p>
+
+                                            <p class="xai-note">
+                                                {{ skill.bloom_evidence_role }}
+                                            </p>
+
+                                            {% if skill.top_bloom_candidates %}
+                                                <p><strong>Top Bloom Candidates:</strong></p>
+                                                <ul>
+                                                    {% for candidate in skill.top_bloom_candidates %}
+                                                        <li>
+                                                            {{ candidate.level }}
+                                                            —
+                                                            {{ candidate.score }}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </details>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="xai-note">
+                                    No ESCO skills were extracted for this module after semantic
+                                    filtering. The module may still contribute through Bloom-level
+                                    academic evidence, but no ESCO skill passed the configured
+                                    similarity threshold.
+                                </p>
+                            {% endif %}
+                        </details>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No module-level ESCO skill evidence is available.</p>
+            {% endif %}
+        </section>
+
+        <section class="grid dashboard-section-ranked">
+
+            <div class="card">
+                <h2>Ranked ESCO Skill Evidence</h2>
+
+                {% for skill in profile.aggregated_skills %}
+                    {% if loop.index <= 10 %}
+                        <div class="skill-item">
+                            <strong>#{{ loop.index }} {{ skill.display_title }}</strong><br>
+                            <span class="score">
+                                {{ skill.academic_normalized_percentage }}% of evidence ceiling
+                            </span>
+                            <span class="badge">
+                                {{ skill.interpreted_level }}
+                            </span>
+
+                            <details class="technical-info">
+                                <summary>Why this ESCO skill evidence signal?</summary>
+
+                                <p><strong>Academic Evidence Score:</strong> {{ skill.aggregated_score }}</p>
+                                <p><strong>Academic Normalized Evidence:</strong> {{ skill.academic_normalized_score }}</p>
+                                <p><strong>Theoretical Evidence Ceiling:</strong> {{ profile.calibration.academic_evidence_ceiling or profile.calibration.academic_competency_ceiling }}</p>
+                                <p><strong>Academic Normalized Percentage:</strong> {{ skill.academic_normalized_percentage }}%</p>
+                                <p><strong>Relative Profile Rank:</strong> {{ skill.relative_rank_percentage }}%</p>
+                                <p><strong>Evidence Level:</strong> {{ skill.interpreted_level }}</p>
+                                <p><strong>ESCO URI:</strong> {{ skill.esco_uri }}</p>
+                                <p><strong>Preferred Label:</strong> {{ skill.preferred_label }}</p>
+                                <p><strong>Modules:</strong> {{ skill.modules | join(", ") }}</p>
+                                <p><strong>Bloom Cognitive Levels:</strong> {{ skill.cognitive_levels | join(", ") }}</p>
+                                <p><strong>Occurrences:</strong> {{ skill.occurrences }}</p>
+
+                                <p><strong>Scoring Formula:</strong></p>
+
+                                {% for component in skill.xai_components %}
+                                    <div class="xai-formula-box">
+
+                                        <p>
+                                            <strong>Formula:</strong>
+                                            {{ component.formula }}
+                                        </p>
+
+                                        <p>
+                                            Bloom Weight:
+                                            {{ component.bloom_weight }}
+                                        </p>
+
+                                        <p>
+                                            Semantic Similarity:
+                                            {{ component.similarity_score }}
+                                        </p>
+
+                                        <p>
+                                            Module Level Weight:
+                                            {{ component.module_level_weight }}
+                                        </p>
+
+                                        <p>
+                                            Grade Weight:
+                                            {{ component.grade_weight }}
+                                        </p>
+
+                                    </div>
+                                {% endfor %}
+
+                                <p class="xai-note">
+                                    This ESCO skill evidence signal was inferred by combining ESCO skill extraction,
+                                    semantic similarity, Bloom cognitive weighting, module level weighting,
+                                    academic performance evidence, and score calibration. The academic
+                                    normalized score is calculated against the theoretical academic evidence
+                                    ceiling, while the relative profile rank shows how strong this signal is
+                                    compared with the student's other extracted skill signals.
+                                </p>
+                            </details>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="card">
+                <h2>Semantic Skill Domains</h2>
+
+                {% for cluster in clusters.clusters %}
+                    <div class="domain-item">
+                        <strong>{{ cluster.cluster_label }}</strong>
+
+                        <ul>
+                            {% for skill in cluster.skills %}
+                                <li>{{ skill.display_title }}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <details class="technical-info">
+                            <summary>Why this semantic domain?</summary>
+
+                            <p><strong>Cluster ID:</strong> {{ cluster.cluster_id }}</p>
+                            <p><strong>Domain Label:</strong> {{ cluster.cluster_label }}</p>
+
+                            <p><strong>Included ESCO Skills:</strong></p>
+                            <ul>
+                                {% for skill in cluster.skills %}
+                                    <li>
+                                        {{ skill.display_title }}
+                                        —
+                                        {{ skill.aggregated_score }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <p class="xai-note">
+                                This domain is an interpretive grouping created by clustering
+                                ESCO-aligned skills using semantic embeddings and agglomerative
+                                clustering. It is not an official ESCO domain; it is used to
+                                make the extracted skill profile easier to interpret.
+                            </p>
+                        </details>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </section>
+
+        <section class="card dashboard-section-occupations">
+            <h2>ESCO Occupation Orientation Signals</h2>
+
+            <div class="snapshot-grid">
+
+                <div class="snapshot-box">
+                    <h3>Prioritised Occupation Signals</h3>
+
+                    <ul>
+                        {% for occupation in top_occupation_signals %}
+                            <li>
+                                <strong>{{ occupation.occupation_label }}</strong><br>
+                                Evidence: {{ occupation.evidence_score }}
+                                | {{ occupation.signal_level }}
+                                | Skills: {{ occupation.matched_skill_count }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="snapshot-box">
+                    <h3>Weak or Possible-Noise Links</h3>
+
+                    <ul>
+                        {% for occupation in occupation_orientation.weak_or_possible_noise_signals[:5] %}
+                            {% if loop.index <= 3 %}
+                                <li>
+                                    <strong>{{ occupation.occupation_label }}</strong><br>
+                                    {{ occupation.evidence_category }}
+                                    | Evidence: {{ occupation.evidence_score }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+
+            <details class="technical-info">
+                <summary>Why these orientation signals?</summary>
+
+                <p>
+                    Prioritised signals have stronger ESCO-based support through higher
+                    evidence scores, multiple matched skills, or essential skill-to-occupation
+                    relations. Weak or possible-noise links are retained for transparency
+                    but should be interpreted cautiously.
+                </p>
+            </details>
+        </section>
+
+        <section class="card dashboard-section-visuals">
+            <h2>Visual Analytics</h2>
+
+            <div class="chart-grid">
+
+                <div class="chart-card">
+                    <h3>Top Academic Evidence Signals</h3>
+                    {% if chart_status.top_skills.exists %}
+                        <img
+                            src="/charts/{{ chart_status.top_skills.filename }}?v={{ cache_buster }}"
+                            alt="Top Skills Bar Chart"
+                        >
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <strong>Top Skills chart unavailable</strong>
+                            <p>
+                                This chart has not been generated yet. Run the academic evidence profiling
+                                pipeline to create the latest visual analytics.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <p class="chart-guidance">
+                        Read as a ranked view of ESCO-aligned skills by academic evidence
+                        strength. Higher bars indicate stronger evidence within this profile,
+                        not professional mastery.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Semantic Domain Strength</h3>
+                    {% if chart_status.get("domain_strength", {}).get("exists") %}
+                        <img
+                            src="/charts/{{ chart_status.get('domain_strength').filename }}?v={{ cache_buster }}"
+                            alt="Semantic Domain Strength Bar Chart"
+                        >
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <strong>Domain Strength chart unavailable</strong>
+                            <p>
+                                This chart has not been generated yet or the chart image is missing.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <p class="chart-guidance">
+                        Read as broader semantic evidence areas ranked by the average academic evidence
+                        of their included ESCO skills. It is easier to compare than a radar chart.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Bloom Depth by Module Level</h3>
+                    {% if chart_status.bloom.exists %}
+                        <img
+                            src="/charts/{{ chart_status.bloom.filename }}?v={{ cache_buster }}"
+                            alt="Bloom Distribution Chart"
+                        >
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <strong>Bloom Distribution chart unavailable</strong>
+                            <p>
+                                This chart has not been generated yet or no Bloom distribution data is available.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <p class="chart-guidance">
+                        Read as cognitive-depth evidence across academic module levels. It shows
+                        whether evidence comes from foundational, intermediate, or advanced modules.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Clustered Domain Heatmap</h3>
+                    {% if chart_status.heatmap.exists %}
+                        <img
+                            src="/charts/{{ chart_status.heatmap.filename }}?v={{ cache_buster }}"
+                            alt="Clustered Domain Heatmap"
+                        >
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <strong>Clustered Domain Heatmap unavailable</strong>
+                            <p>
+                                This chart has not been generated yet or no module-domain relationship data is available.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <p class="chart-guidance">
+                        Read rows as modules and columns as semantic domains. Stronger colour
+                        means that a module contributes more evidence to that domain.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <h3>ESCO Occupation Orientation</h3>
+                    {% if chart_status.get("occupation_orientation", {}).get("exists") %}
+                        <img
+                            src="/charts/{{ chart_status.get('occupation_orientation').filename }}?v={{ cache_buster }}"
+                            alt="ESCO Occupation Orientation Chart"
+                        >
+                    {% else %}
+                        <div class="chart-placeholder">
+                            <strong>Occupation Orientation chart unavailable</strong>
+                            <p>
+                                This chart has not been generated yet or no ESCO occupation signal data is available.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <p class="chart-guidance">
+                        Read as indicative ESCO occupation-orientation signals derived from linked
+                        skills. It is not a career prediction or hiring recommendation.
+                    </p>
+                </div>
+
+            </div>
+
+            <details class="technical-info">
+                <summary>How should these visualisations be interpreted?</summary>
+
+                <p>
+                    The visual analytics are generated from the latest pipeline output.
+                    They represent inferred academic evidence signals, Bloom cognitive distribution,
+                    semantic skill clusters, and module-to-domain relationships.
+                </p>
+
+                <p>
+                    Raw scores are conservative composite indicators. Academic normalized scores
+                    are used for user-facing interpretation and are calculated against the
+                    theoretical academic evidence ceiling of the scoring model. Relative
+                    profile ranking is used only for within-student comparison and should not
+                    be interpreted as a universal benchmark.
+                </p>
+            </details>
+        </section>
+
+        <div class="card dashboard-section-runs">
+
+            <h2>Recent Session Runs</h2>
+
+            {% if session_runs %}
+
+            <table class="session-runs-table">
+
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Modules</th>
+                        <th>Top Skill</th>
+                        <th>Top Domain</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for run in session_runs %}
+                    <tr>
+
+                        <td>{{ run.timestamp }}</td>
+
+                        <td>
+                            {% for module in run.modules %}
+                                <span class="session-tag">
+                                    {{ module }}
+                                </span>
+                            {% endfor %}
+                        </td>
+
+                        <td>{{ run.top_skill }}</td>
+
+                        <td>
+                            <span class="session-tag">
+                                {{ run.top_domain }}
+                            </span>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <p>No session runs yet.</p>
+
+            {% endif %}
+
+        </div>
+
+        {% if llm_report_warning %}
+            <div class="warning-box">
+                <strong>LLM Report Warning</strong>
+                <p>{{ llm_report_warning }}</p>
+            </div>
+        {% endif %}
+
+        <section class="card dashboard-section-rag">
+            <h2>RAG Grounding Evidence</h2>
+
+            <p class="xai-note">
+                This section shows the evidence retrieved from the final structured
+                profile before local LLM generation. It makes the report generation
+                auditable: the LLM receives section-specific evidence rather than the
+                whole project output as one large prompt.
+            </p>
+
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <span class="metric-label">Retrieved Sections</span>
+                    <strong>{{ final_profile_summary.retrieved_section_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Available Chunks</span>
+                    <strong>{{ final_profile_summary.rag_chunk_count }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Generation Status</span>
+                    <strong>{{ rag_generation_metadata.quality_checks.generation_status|default("not prepared") }}</strong>
+                </div>
+
+                <div class="metric-box">
+                    <span class="metric-label">Quality Gate</span>
+                    <strong>{{ rag_generation_metadata.quality_checks.quality_gate_passed|default(false) }}</strong>
+                </div>
+            </div>
+
+            {% if rag_retrieved_evidence %}
+                <div class="rag-section-grid">
+                    {% for section_id, section in rag_retrieved_evidence.items() %}
+                        <details class="rag-section-card">
+                            <summary>
+                                <span>{{ section.section_title }}</span>
+                                <span class="module-skill-count">
+                                    {{ section.chunks | length }} chunks
+                                </span>
+                            </summary>
+
+                            <p class="help-text">
+                                Retrieval method:
+                                <strong>{{ section.retrieval_method }}</strong>
+                            </p>
+
+                            {% for chunk in section.chunks %}
+                                <div class="rag-chunk">
+                                    <strong>{{ chunk.title }}</strong>
+                                    <p>
+                                        <span class="badge">{{ chunk.chunk_type }}</span>
+                                        Priority: {{ chunk.priority_score }}
+                                        {% if chunk.retrieval_score %}
+                                            | Retrieval: {{ chunk.retrieval_score }}
+                                        {% endif %}
+                                    </p>
+                                    <p>{{ chunk.text }}</p>
+                                </div>
+                            {% endfor %}
+                        </details>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>
+                    No retrieved RAG evidence is available yet. Generate the generic RAG report
+                    or run the report preparation step to populate this section.
+                </p>
+            {% endif %}
+        </section>
+
+        <section class="card dashboard-section-report">
+            <h2>Generic Evidence-Grounded Employability Report</h2>
+            <pre>{{ report }}</pre>
+            <details class="technical-info">
+                <summary>How was this report generated?</summary>
+
+                <p>
+                    This report is generated from retrieved RAG evidence derived from the
+                    final structured academic evidence profile.
+                </p>
+
+                <p>
+                    The local LLM was instructed to use only the provided evidence and not
+                    invent tools, programming languages, certifications, projects, or work
+                    experience.
+                </p>
+
+                <p>
+                    Current LLM model:
+                    <strong>{{ llm_config.model }}</strong>
+                </p>
+
+                {% if rag_generation_metadata %}
+                    <p>
+                        <strong>Prompt characters:</strong>
+                        {{ rag_generation_metadata.prompt_character_count }}
+                    </p>
+
+                    <p>
+                        <strong>Retrieved chunks:</strong>
+                        {{ rag_generation_metadata.retrieval_summary.total_retrieved_chunks }}
+                    </p>
+
+                    <p>
+                        <strong>Required sections present:</strong>
+                        {{ rag_generation_metadata.quality_checks.required_sections_present }}
+                    </p>
+
+                    <p>
+                        <strong>Forbidden phrase check:</strong>
+                        {{ rag_generation_metadata.quality_checks.forbidden_phrase_check_passed }}
+                    </p>
+
+                    {% if rag_generation_metadata.quality_checks.forbidden_phrases_found %}
+                        <p>
+                            <strong>Forbidden phrases found:</strong>
+                            {{ rag_generation_metadata.quality_checks.forbidden_phrases_found | join(", ") }}
+                        </p>
+                    {% endif %}
+                {% endif %}
+
+                {% if rag_evaluation_metrics %}
+                    <p>
+                        <strong>RAG proxy metrics:</strong>
+                        Context precision
+                        {{ rag_evaluation_metrics.context_precision.overall_context_precision_proxy|default("-") }},
+                        section relevance
+                        {{ rag_evaluation_metrics.section_relevance.overall_section_relevance_proxy|default("-") }},
+                        faithfulness
+                        {{ rag_evaluation_metrics.faithfulness.faithfulness_proxy|default("-") }},
+                        answer relevance
+                        {{ rag_evaluation_metrics.answer_relevance.answer_relevance_proxy|default("-") }}.
+                    </p>
+                {% endif %}
+            </details>
+        </section>
+
+        <section class="card dashboard-section-report">
+            <h2>Targeted Occupation Evidence Report</h2>
+            <pre>{{ targeted_occupation_report }}</pre>
+
+            <details class="technical-info">
+                <summary>Targeted RAG evidence and quality checks</summary>
+
+                {% if targeted_rag_generation_metadata %}
+                    <p>
+                        <strong>Generation status:</strong>
+                        {{ targeted_rag_generation_metadata.quality_checks.generation_status }}
+                    </p>
+
+                    <p>
+                        <strong>Quality gate:</strong>
+                        {{ targeted_rag_generation_metadata.quality_checks.quality_gate_passed }}
+                    </p>
+
+                    <p>
+                        <strong>Selected occupation:</strong>
+                        {{ targeted_rag_generation_metadata.selected_occupation.occupation_label|default("-") }}
+                    </p>
+
+                    <p>
+                        <strong>Retrieved chunks:</strong>
+                        {{ targeted_rag_generation_metadata.retrieval_summary.total_retrieved_chunks }}
+                    </p>
+                {% endif %}
+
+                {% if targeted_rag_evaluation_metrics %}
+                    <p>
+                        <strong>Targeted RAG proxy metrics:</strong>
+                        Context precision
+                        {{ targeted_rag_evaluation_metrics.context_precision.overall_context_precision_proxy|default("-") }},
+                        section relevance
+                        {{ targeted_rag_evaluation_metrics.section_relevance.overall_section_relevance_proxy|default("-") }},
+                        faithfulness
+                        {{ targeted_rag_evaluation_metrics.faithfulness.faithfulness_proxy|default("-") }},
+                        answer relevance
+                        {{ targeted_rag_evaluation_metrics.answer_relevance.answer_relevance_proxy|default("-") }}.
+                    </p>
+                {% endif %}
+
+                {% if targeted_rag_retrieved_evidence %}
+                    <div class="rag-section-grid">
+                        {% for section_id, section in targeted_rag_retrieved_evidence.items() %}
+                            {% if section_id != "_metadata" %}
+                                <details class="rag-section-card">
+                                    <summary>
+                                        {{ section.section_title }}
+                                        <span>
+                                            {{ section.chunks|length }} chunks
+                                        </span>
+                                    </summary>
+
+                                    {% for chunk in section.chunks %}
+                                        <div class="rag-chunk">
+                                            <strong>{{ chunk.title }}</strong>
+                                            <span>
+                                                {{ chunk.chunk_type }}
+                                                | Priority: {{ chunk.priority_score }}
+                                                | Retrieval: {{ chunk.retrieval_score|default("-") }}
+                                            </span>
+                                            <p>{{ chunk.text }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </details>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>
+                        No targeted RAG evidence is available yet. Select an ESCO
+                        occupation signal and generate a targeted occupation evidence report.
+                    </p>
+                {% endif %}
+            </details>
+        </section>
+
+        <script>
+            const generateReportForm = document.getElementById("generate-report-form");
+            const generateReportButton = document.getElementById("generate-report-btn");
+            const generateTargetedReportForm = document.getElementById("generate-targeted-report-form");
+            const generateTargetedReportButton = document.getElementById("generate-targeted-report-btn");
+
+            if (generateReportForm && generateReportButton) {
+                generateReportForm.addEventListener("submit", function () {
+                    generateReportButton.textContent = "Generating generic RAG report...";
+                    generateReportButton.classList.add("loading-button");
+
+                    setTimeout(() => {
+                        generateReportButton.disabled = true;
+                    }, 50);
+                });
+            }
+
+            if (generateTargetedReportForm && generateTargetedReportButton) {
+                generateTargetedReportForm.addEventListener("submit", function () {
+                    generateTargetedReportButton.textContent = "Generating targeted occupation report...";
+                    generateTargetedReportButton.classList.add("loading-button");
+
+                    setTimeout(() => {
+                        generateTargetedReportButton.disabled = true;
+                    }, 50);
+                });
+            }
+        </script>
+
+    </main>
+
+    <footer class="footer">
+        <p>
+            AI-assisted academic evidence profiling system using ESCO, Bloom taxonomy,
+            semantic clustering and local RAG-grounded LLM generation.
+        </p>
+
+        <p class="esco-acknowledgement">
+            This service uses the ESCO classification of the European Commission.
+        </p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-theme");
+
+            localStorage.setItem(
+                "theme",
+                document.body.classList.contains("dark-theme")
+                    ? "dark"
+                    : "light"
+            );
+        });
+
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+    </script>
+    
+</body>
+</html>

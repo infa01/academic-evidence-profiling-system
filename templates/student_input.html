@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Module Input</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>Student Module Input</h1>
+        <p>Select completed modules and enter assessment data.</p>
+    </header>
+
+    <div class="view-toggle-1">
+        <button id="theme-toggle" class="secondary-btn">
+            Toggle Dark Theme
+        </button>
+    </div>
+
+    <main class="container">
+
+        {% if input_error %}
+            <section class="card error-card">
+                <h2>Input Validation Warning</h2>
+                <p>{{ input_error }}</p>
+            </section>
+        {% endif %}
+        <section class="card">
+            <h2>Completed Modules</h2>
+
+            <form action="/student-input" method="post">
+
+                <div class="module-input-card">
+                    <label>
+                        Student Name / Alias  
+                    </label>
+                    
+                    <div class="input-grid">
+                        <input
+                            type="text"
+                            name="student_name"
+                            placeholder="Optional"
+                        >
+                    </div>
+                </div>
+
+                {% for module in modules %}
+
+                    <div class="module-input-card">
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="module_code"
+                                value="{{ module.module_code }}"
+                                class="module-checkbox"
+                            >
+
+                            <strong>
+                                {{ module.module_code }}
+                            </strong>
+
+                            —
+                            {{ module.module_title }}
+                        </label>
+
+                        <div class="input-grid">
+
+                            <div>
+                                <label>Final Grade</label>
+                                <input
+                                    type="number"
+                                    name="final_grade_{{ module.module_code }}"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                >
+                            </div>
+
+                            <div>
+                                <label>Coursework Grade</label>
+                                <input
+                                    type="number"
+                                    name="coursework_grade_{{ module.module_code }}"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                >
+                            </div>
+
+                            <div>
+                                <label>Coursework Weight</label>
+                                <input
+                                    type="number"
+                                    name="coursework_weight_{{ module.module_code }}"
+                                    min="0"
+                                    max="1"
+                                    step="0.05"
+                                    placeholder="0.5"
+                                >
+                            </div>
+
+                            <div>
+                                <label>Coursework Components</label>
+                                <select 
+                                    name="coursework_components_{{ module.module_code }}"
+                                    class="module-field coursework-components"
+                                >
+                                    <option value="1">1 Coursework</option>
+                                    <option value="2">2 Courseworks</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Coursework 2 Grade</label>
+                                <input
+                                    type="number"
+                                    name="coursework_2_grade_{{ module.module_code }}"
+                                    class="module-field coursework-2-field"
+                                    min="0"
+                                    max="100"
+                                    step="0.1"
+                                    placeholder="Optional"
+                                >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                <p id="form-error" class="form-error hidden">
+                    Please select at least one completed module before generating the competency profile.
+                </p>
+
+                <div class="module-input-card">
+
+                    <details class="prompt-editor-panel">
+
+                        <summary>
+                            View / Edit Current Employability Report Prompt
+                        </summary>
+
+                        <textarea
+                            name="custom_prompt"
+                            class="custom-prompt-box"
+                            rows="37"
+                            placeholder="{{ default_prompt }}"
+                        >{{ custom_prompt }}</textarea>
+
+                        <p class="help-text">
+                            This prompt is used by the local LLM during employability report generation.
+                            If left empty, the system will use the default evidence-based prompt. If a custom
+                            prompt is provided, it will replace the default writing instructions while the
+                            structured competency evidence will still be generated by the pipeline. Custom
+                            prompts should be edited carefully to avoid overclaiming, unsupported claims, or
+                            instructions that conflict with the evidence-based nature of the report.
+                        </p>
+
+                    </details>
+
+                    <details class="prompt-variables-panel">
+                        <summary>Available Prompt Variables</summary>
+
+                        <p class="help-text">
+                            If you edit the prompt, you may use the following placeholders to insert
+                            the structured competency evidence generated by the system.
+                        </p>
+
+                        <div class="prompt-variable-box">
+                            <code>{{ '{{student_id}}' }}</code>
+                            <span>Inserts the current student ID.</span>
+                        </div>
+
+                        <div class="prompt-variable-box">
+                            <code>{{ '{{skill_lines}}' }}</code>
+                            <span>Inserts the calibrated top skills, scores, evidence levels and modules.</span>
+                        </div>
+
+                        <div class="prompt-variable-box">
+                            <code>{{ '{{domain_lines}}' }}</code>
+                            <span>Inserts the generated competency domains and their included skills.</span>
+                        </div>
+
+                        <p class="help-text">
+                            For reliable report generation, custom prompts should normally include
+                            <code>{{ '{{skill_lines}}' }}</code> and <code>{{ '{{domain_lines}}' }}</code>.
+                            Otherwise, the local LLM may not receive enough structured evidence to produce
+                            a grounded employability report.
+                        </p>
+                    </details>
+
+                </div>
+
+                <button id="submit-student-input" class="generate-btn" type="submit">
+                    Save Student Input
+                </button>
+
+            </form>
+
+        </section>
+
+        <script>
+            const studentInputForm = document.querySelector("form");
+            const submitStudentInputButton = document.getElementById("submit-student-input");
+
+            if (studentInputForm && submitStudentInputButton) {
+                studentInputForm.addEventListener("submit", function (event) {
+                    const checkedModules = document.querySelectorAll(".module-checkbox:checked");
+
+                    if (checkedModules.length === 0) {
+                        return;
+                    }
+
+                    submitStudentInputButton.disabled = true;
+                    submitStudentInputButton.textContent = "Running competency profiling pipeline...";
+                    submitStudentInputButton.classList.add("loading-button");
+                });
+            }
+        </script>
+
+    </main>
+
+    <script>
+        document.querySelectorAll(".module-input-card").forEach(card => {
+            const checkbox = card.querySelector(".module-checkbox");
+
+            if (!checkbox){
+                return;
+            }
+
+            const fields = card.querySelectorAll(".module-field");
+            const courseworkSelect = card.querySelector(".coursework-components");
+            const coursework2Field = card.querySelector(".coursework-2-field");
+
+            function updateFields() {
+                const isChecked = checkbox.checked;
+
+                fields.forEach(field => {
+                    field.disabled = !isChecked;
+
+                    if (!isChecked) {
+                        field.required = false;
+                        field.value = field.type === "number" && field.name.includes("coursework_weight")
+                            ? "0.5"
+                            : "";
+                    }
+                });
+
+                if (isChecked) {
+                    fields.forEach(field => {
+                        if (!field.classList.contains("coursework-2-field")) {
+                            field.required = true;
+                        }
+                    });
+
+                    if (courseworkSelect && coursework2Field) {
+                        if (courseworkSelect.value === "2") {
+                            coursework2Field.disabled = false;
+                            coursework2Field.required = true;
+                        } else {
+                            coursework2Field.disabled = true;
+                            coursework2Field.required = false;
+                            coursework2Field.value = "";
+                        }
+                    }
+                }
+            }
+
+            checkbox.addEventListener("change", updateFields);
+
+            if (courseworkSelect) {
+                courseworkSelect.addEventListener("change", updateFields);
+            }
+
+            updateFields();
+        });
+        
+        const form = document.querySelector("form");
+        const formError = document.querySelector("#form-error");
+
+        form.addEventListener("submit", function(event) {
+            const checkedModules = document.querySelectorAll(".module-checkbox:checked");
+
+            if (checkedModules.length === 0) {
+                event.preventDefault();
+                formError.classList.remove("hidden");
+            }
+        });
+    </script>
+
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-theme");
+
+            localStorage.setItem(
+                "theme",
+                document.body.classList.contains("dark-theme")
+                    ? "dark"
+                    : "light"
+            );
+        });
+
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+    </script>
+</body>
+
+</html>

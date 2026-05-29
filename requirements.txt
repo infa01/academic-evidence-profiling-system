@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+requests
+sentence-transformers
+scikit-learn
+matplotlib
+reportlab
+esco-skill-extractor

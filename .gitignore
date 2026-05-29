@@ -1,0 +1,114 @@
+# =========================================================
+# Python
+# =========================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# =========================================================
+# Virtual environments
+# =========================================================
+.venv/
+venv/
+env/
+ENV/
+
+# =========================================================
+# Secrets / local config
+# =========================================================
+.env
+.env.*
+!.env.example
+
+# =========================================================
+# IDE / OS files
+# =========================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================================================
+# Logs
+# =========================================================
+*.log
+logs/
+
+# =========================================================
+# ESCO downloaded / generated data
+# Keep the folder path only through .gitkeep
+# =========================================================
+data/esco/*
+!data/esco/.gitkeep
+!data/esco/README.md
+
+# Large archives
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# =========================================================
+# Generated output
+# Keep folder paths only through .gitkeep
+# =========================================================
+output/*
+!output/.gitkeep
+!output/charts/
+output/charts/*
+!output/charts/.gitkeep
+
+# =========================================================
+# Generated static charts
+# Keep folder path only through .gitkeep
+# =========================================================
+static/charts/*
+!static/charts/.gitkeep
+
+# =========================================================
+# ML / NLP model cache and binary artifacts
+# =========================================================
+models/
+model_cache/
+.cache/
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+# =========================================================
+# Temporary folders
+# =========================================================
+tmp/
+temp/
+
+# =========================================================
+# Jupyter
+# =========================================================
+.ipynb_checkpoints/
+
+# Local/synthetic evaluation inputs and helper used to generate them.
+data/generated_student_inputs/
+scripts/dev_tools/generate_advisor_cases.py
+scripts/utility/
+scripts/visualise_clustered_radar.py
+
+# Runtime student input should stay local.
+data/student_input.json
+
+# Bloom-enriched modules are generated from data/modules.json.
+data/modules_with_bloom.json
