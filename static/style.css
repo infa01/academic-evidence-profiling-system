@@ -634,41 +634,10 @@ details.technical-info p {
     line-height: 1.5;
 }
 
-/* Prompt editor */
-.custom-prompt-box {
-    width: 100%;
-    margin-top: 12px;
-    padding: 14px;
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    font-family: Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    resize: vertical;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-.custom-prompt-box::placeholder {
-    color: var(--secondary-text);
-    opacity: 0.85;
-}
-
 .help-text {
     color: var(--secondary-text);
     font-size: 14px;
     margin-top: 8px;
-}
-
-.prompt-editor-panel summary {
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--heading-color);
-    padding: 8px 0;
-}
-
-.prompt-editor-panel[open] summary {
-    margin-bottom: 12px;
 }
 
 /* Footer */
@@ -689,41 +658,6 @@ body.dark-theme .chart-card img {
     margin: 24px auto 24px;
     display: flex;
     gap: 12px;
-}
-
-.prompt-variables-panel {
-    margin-top: 14px;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    background-color: var(--card-bg);
-}
-
-.prompt-variables-panel summary {
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--text-color);
-}
-
-.prompt-variable-box {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px;
-    margin-top: 8px;
-    border-radius: 8px;
-    background-color: var(--subtle-bg, #f3f4f6);
-}
-
-.prompt-variable-box code {
-    min-width: 170px;
-    font-weight: bold;
-    color: #2563eb;
-}
-
-.prompt-variable-box span {
-    color: var(--text-color);
-    line-height: 1.4;
 }
 
 .error-card {

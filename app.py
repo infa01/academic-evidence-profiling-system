@@ -36,7 +36,6 @@ OUTPUT_DIR = BASE_DIR / "output"
 DATA_DIR = BASE_DIR / "data"
 STUDENT_INPUT_PATH = DATA_DIR / "student_input.json"
 LLM_CONFIG_PATH = BASE_DIR / "config" / "llm_config.json"
-CUSTOM_PROMPT_PATH = BASE_DIR / "config" / "custom_prompt.txt"
 PROFILE_PATH = BASE_DIR / "output" / "student_skill_profile_calibrated.json"
 FINAL_PROFILE_PATH = BASE_DIR / "output" / "final_student_competency_profile.json"
 CLUSTERS_PATH = BASE_DIR / "output" / "student_skill_clusters.json"
@@ -829,50 +828,6 @@ def generate_targeted_report(occupation_uri: str = Form(...)):
 @app.get("/student-input")
 def student_input_page(request: Request):
 
-    custom_prompt = ""
-    # Default evidence-constrained prompt used for local LLM generation
-    default_prompt = """
-You are generating an evidence-grounded employability report for a Computer Science student.
-
-IMPORTANT RULES:
-- Use ONLY the evidence provided below.
-- Do NOT invent programming languages, tools, projects, work experience, universities, grades, or certifications.
-- Do NOT mention skills that are not listed.
-- Write in a professional but student-friendly style.
-- The report should be suitable for an academic evidence profiling system.
-- Avoid overclaiming expertise. Use phrases like "shows academic evidence of", "has emerging evidence in", or "may support development toward".
-- Do NOT state that the student is proficient, expert, suitable, or certified.
-- Prefer evidence-based phrasing such as: "shows academic evidence of", "has developing evidence in", and "is relevant to ESCO occupation-orientation signals".
-- Do NOT use phrases like "excellent", "expert", "highly proficient", or "mastered".
-- If an evidence signal has "Emerging Evidence" or "Limited Evidence", describe it as a development area, not as a strength.
-- When comparing domains, describe them as "strongest within this profile" rather than "high" unless the evidence level is Strong Evidence or Very Strong Evidence.
-
-
-STUDENT ID:
-{{student_id}}
-
-TOP CALIBRATED SKILLS:
-{{skill_lines}}
-
-SEMANTIC DOMAINS:
-{{domain_lines}}
-
-TASK:
-Generate an employability report with the following sections:
-
-1. Employability Summary
-2. Key Semantic Domains
-3. Strongest Evidence Areas
-4. Developing Areas
-5. CV-Ready Skills Summary
-
-Keep the report concise and evidence-based.
-"""
-
-    if CUSTOM_PROMPT_PATH.exists():
-        with open(CUSTOM_PROMPT_PATH, "r", encoding="utf-8") as file:
-            custom_prompt = file.read()
-
     print("SESSION RUNS:", SESSION_RUNS)
 
     modules_data = load_json_from_path(
@@ -884,8 +839,6 @@ Keep the report concise and evidence-based.
         name="student_input.html",
         context={
             "modules": modules_data["modules"],
-            "default_prompt": default_prompt,
-            "custom_prompt": custom_prompt,
             "input_error": LAST_INPUT_ERROR
         }
     )
@@ -899,15 +852,10 @@ async def save_student_input(request: Request):
 
     student_name = form.get("student_name")
 
-    custom_prompt = form.get("custom_prompt", "")
-
     # Store validated module assessment structures
     selected_modules = []
 
     module_codes = form.getlist("module_code")
-
-    with open(CUSTOM_PROMPT_PATH, "w", encoding="utf-8") as file:
-        file.write(custom_prompt)
 
     try:
         for module_code in module_codes:
